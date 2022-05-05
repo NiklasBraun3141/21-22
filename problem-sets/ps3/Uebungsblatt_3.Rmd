@@ -1,7 +1,7 @@
 
 ```{r 'check_ps', include=FALSE}
 
-user.name = 'ENTER A USER NAME HERE' # set to your user name
+user.name = 'Niklas' # set to your user name
 
 # To check your problem set, run the 
 # RStudio Addin 'Check Problemset'
@@ -53,6 +53,7 @@ Bitte laden Sie die Pakete `skimr`, `gganimate`, `gifski`, `ggrepel`, `RColorBre
 Anschliessend sollten Sie die folgenden Pakete laden:
 
 ```{r "1___Deskriptive_Anal",eval=FALSE}
+library(UsingR)
 library(tidyverse)
 library(pander)
 library(sf)
@@ -60,12 +61,13 @@ library(gganimate)
 library(ggrepel)
 library(skimr)
 library(RColorBrewer)
+
 ```
 
 a) Im ersten Schritt laden wir die zur Verfuegung stehenden Daten. Laden Sie die im Unterordner "Daten" bereitgestellten Datei `EU_Makro.csv` in R ein. Ergaenzen Sie hierfuer unten stehende Code-Zeile.
 
 ```{r "1___Deskriptive_Anal_a"}
-____ <- read_csv("____")
+eu_makro <- read_csv("data/EU_Makro.csv")
 
 # enter your code here ...
 
@@ -76,7 +78,7 @@ Nun koennen Sie mit dem Paket `skimr` einen guten ersten Einblick in ihre Daten 
 b) Erstellen Sie hierfuer eine Tabelle, welche alle Variablen von `eu_makro` enthaelt. Nutzen Sie hierfuer den Befehl `skim()` und speichern Sie ihre Analyse in `ueberblick` ab. Geben Sie anschliessend `ueberblick` aus.
 
 ```{r "1___Deskriptive_Anal_b"}
-
+ueberblick <- skim(eu_makro)
 # enter your code here ...
 
 ```
@@ -99,7 +101,7 @@ Wie viele individuelle Laender haben wir in unserem Datensatz?
 
 Geben Sie hier die Ziffer Ihrer Antwort ein und fuehren Sie die Codezeile aus:
 ```{r "1___Deskriptive_Anal_c_2",optional=TRUE}
-
+2
 # enter your code here ...
 
 ```
