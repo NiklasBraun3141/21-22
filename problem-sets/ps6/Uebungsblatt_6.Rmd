@@ -1,7 +1,11 @@
 
 ```{r 'check_ps', include=FALSE}
 
-user.name = 'ENTER A USER NAME HERE'
+user.name = 'NiklasBraun'
+library(tidyverse)
+library(skimr)
+
+
 ```
 
 # RTutor Uebungsblatt 6 - Projektkurs
@@ -53,7 +57,7 @@ a) Wie sollte ein Experiment ausgestaltet sein, um valide Aussagen über den Eff
 
 Schreiben Sie die Nummer des Experiments:
 ```{r "1_a"}
-
+2
 # enter your code here ...
 
 ```
@@ -68,7 +72,7 @@ b) Daher machen wir weitere zwei Vorschläge für eine Experiment. Sind diese Ex
 
 Schreiben Sie die Nummer des Experiments oder "nein":
 ```{r "1_b"}
-
+"nein"
 # enter your code here ...
 
 ```
@@ -88,11 +92,13 @@ c) Sie erhalten nun die Daten eines Experiments wie in Experiment 2 beschrieben.
 Laden Sie nun mit folgendem Code den Datensatz und schauen sich diesen mit skimr an:
 
 ```{r "1_c"}
-thp <- read_csv("./data/THP_clean.csv") %>%
-  select(newid, uc, depressed_1y, treat, age_baseline, age_baseline_sq, kids_no, famstruct_baseline, grandmother_baseline, edu_mo, edu_fa, employed_mo_baseline, incomeindex, depindex_0, mspss_tot)
+library(tidyverse)
+thp <- read_csv("./data/THP_clean.csv")%>%
+  select(newid, uc, depressed_1y, treat, age_baseline, age_baseline_sq, kids_no, famstruct_baseline, grandmother_baseline, edu_mo, edu_fa, 
+         employed_mo_baseline, incomeindex, depindex_0, mspss_tot) 
 
 # enter your code here ...
-
+skim(thp)
 ```
 
 Hier eine Erklärung der wichtigsten Variablen:
@@ -119,12 +125,13 @@ thp_plots <- thp %>%
   mutate(treat_factor = as.factor(ifelse(treat == 1 , "Treatment", "Kontrolle")),
          depressed = as.factor(ifelse(depressed_1y == 0, "keine Depressionen", "Depressionen"))) %>%
   filter( !is.na(depressed)) 
-#plot_prop_depression <- ggplot(___, aes(x = ___, fill = ___)) +
-#  geom_bar(position = "fill") +
-#  labs(x = NULL, y = "Anteil an Depressionen", fill = NULL) +
-#  scale_fill_manual(values = c("darkblue", "darkred"))
 
-#plot_prop_depression
+plot_prop_depression <- ggplot(thp_plots, aes(x = depressed , fill = treat_factor)) +
+  geom_bar(position = "fill") +
+  labs(x = NULL, y = "Anteil an Depressionen", fill = NULL) +
+  scale_fill_manual(values = c("darkblue", "darkred"))
+
+plot_prop_depression
 
 # enter your code here ...
 
@@ -138,7 +145,7 @@ e) Was wäre nun, wenn die Mütter auch in der Kontrollgruppe über einen andere
 
 Schreiben sie "ja" oder "nein"
 ```{r "1_e",optional=TRUE}
-
+"ja"
 # enter your code here ...
 
 ```
@@ -148,7 +155,7 @@ f) Wenn wir eine Regression durchführen, bei der das in e) beschriebene Problem
 
 Schreiben sie "überschätzen" oder "unterschätzen"
 ```{r "1_f",optional=TRUE}
-
+"unterschätzen"
 # enter your code here ...
 
 ```
@@ -179,7 +186,7 @@ g) Wenn Sie sich nun die Balancing Tabelle anschauen, wo finden Sie signifikante
 
 Schreiben Sie die Nummer der Variablen:
 ```{r "1_g"}
-
+3
 # enter your code here ...
 
 ```
@@ -195,6 +202,7 @@ h) Führen Sie folgenden Code aus. Fügen Sie zu dem Code noch eine dritte Regre
 ```{r "1_h"}
 reg1 <- lm(depressed_1y ~ treat, data=thp)
 reg2 <- lm(depressed_1y ~ treat + depindex_0, data=thp)
+reg3 <- lm(depressed_1y ~ treat + depindex_0 + age_baseline + age_baseline_sq + kids_no + famstruct_baseline + grandmother_baseline + edu_mo +            edu_fa + employed_mo_baseline + incomeindex + mspss_tot, data = thp )
 
 # enter your code here ...
 
@@ -218,7 +226,7 @@ Betrachten Sie die Regressionstabelle. Welche dieser Aussagen sind alle korrekt?
 
 Schreiben Sie einen Vektor mit den Nummern der richtigen Interpretation(en):
 ```{r "1_i_2"}
-
+c(2,4)
 # enter your code here ...
 
 ```
@@ -238,7 +246,7 @@ j) Betrachten Sie die Regressionstabelle. Welche Aussage ist korrekt?
 
 Schreiben Sie die Nummer der richtigen Antwort:
 ```{r "1_j"}
-
+2
 # enter your code here ...
 
 ```
@@ -270,7 +278,7 @@ Welche Bedeutung hat die Variable `work`
 > Aussage 3: Dummy Variable ob die Mutter gearbeitet hat in 1979
 
 ```{r "2_a_2",optional=TRUE}
-
+2
 # enter your code here ...
 
 ```
@@ -283,6 +291,8 @@ Fertility <- Fertility %>%
                             work == 0 ~ 0))
 
 # enter your code here ...
+reg1 <- lm(work01 ~ morekids, data = Fertility)
+summary(reg1)
 
 
 # enter your code here ...
@@ -300,7 +310,7 @@ c) Nun ein kleines Quiz. Welche Aussage ist korrekt?
 
 Schreiben Sie hier die Nummer der Aussage:
 ```{r "2_c",optional=TRUE}
-
+2
 # enter your code here ...
 
 ```
@@ -361,7 +371,7 @@ z -> x [label="+"];
 
 Schreiben Sie hier die Nummer der Variablen:
 ```{r "2_d_4"}
-
+3
 # enter your code here ...
 
 ```
@@ -394,7 +404,7 @@ reg2 <- Fertility %>%
 
 Schreiben Sie hier die Nummer der Variablen:
 ```{r "2_e_2"}
-
+3
 # enter your code here ...
 
 ```
@@ -438,7 +448,7 @@ Welcher Interpretation würden Sie zustimmen:
 
 Schreiben Sie hier die Nummer der Interpretation:
 ```{r "2_f_2"}
-
+2
 # enter your code here ...
 
 ```
@@ -447,7 +457,7 @@ g) Welche der Interpretationen der vorherigen Aufgabe sind kausale Formulierunge
 
 Schreiben Sie einen Vektor mit den Nummern der richtigen Interpretationen:
 ```{r "2_g",optional=TRUE}
-
+c(1,2,3)
 # enter your code here ...
 
 ```

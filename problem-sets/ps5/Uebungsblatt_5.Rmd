@@ -1,7 +1,10 @@
 
 ```{r 'check_ps', include=FALSE}
 
-user.name = 'ENTER A USER NAME HERE'
+user.name = 'NiklasBraun'
+library(skimr)
+install.packages("DiagrammeR")
+library(DiagrammeR)
 ```
 
 # RTutor Uebungsblatt 5 - Projektkurs
@@ -44,6 +47,7 @@ library(wooldridge)
 data(wage1)
 head(wage1)
 skim(wage1)
+library(tidyverse)
 ```
 
 Fuer eine Erklaerung der Variablen geben Sie einfach `help(wage1)` in der R Konsole ein.
@@ -54,10 +58,13 @@ b) Wir moechten nun durch eine lineare Regression den Zusammenhang zwischen Stun
 ```{r "1_b",optional=TRUE}
 
 # enter your code here ...
-
+reg1 <- lm(wage ~ educ, dat = wage1)
+summary(reg1)
 
 # enter your code here ...
 
+#install.packages("DiagrammeR")
+#library(DiagrammeR)
 ```
 Hier waere ein guter Zeitpunkt das Addin 'Check Problemset' auszufuehren!
 
@@ -67,7 +74,7 @@ c) Nun ein kleines Quiz. Ist folgende Interpretation des Regressionsergebnisses 
 
 Schreiben Sie "ja" oder "nein"
 ```{r "1_c",optional=TRUE}
-
+"nein"
 # enter your code here ...
 
 ```
@@ -89,9 +96,9 @@ Vervollstaendigen Sie den Code and der Stelle ___, um die durchschnittlichen Aus
 
 ```{r "1_e",optional=TRUE}
 wage1 %>%
- mutate(gender = ifelse(female==1,"___","___")) %>%
+ mutate(gender = ifelse(female==1,"female","male")) %>%
  group_by(gender) %>%
- summarize(mean(___))
+ summarize(mean(educ))
 
 # enter your code here ...
 
@@ -125,7 +132,7 @@ Wenn wir y auf nur eine Variable x regressieren, misst der geschaetzte Koeffizie
  
 Tippen Sie 1 oder 2 ein:
 ```{r "1_e_3",optional=TRUE}
-
+1
 # enter your code here ...
 
 ```
@@ -163,7 +170,7 @@ Wir haben eine Variable `w` die nur `y` aber nicht `x` beeinflusst. Es soll kein
 Nehmen Sie an, wir regressieren y auf x ohne fuer w zu kontrollieren, d.h `lm(y~x)`. Ist der geschaetzte Koeffizient von `x` ein verzerrter oder unverzerrter Schaetzer des kausalen Effektes von `x` auf `y`? Geben Sie "verzerrt" oder "unverzerrt" ein:
 
 ```{r "1_g_2",optional=TRUE}
-
+"unverzerrt"
 # enter your code here ...
 
 ```
@@ -222,7 +229,7 @@ Wenn wir w als Kontrollvariable einbauen, ist der Koeffizient von x weiterhin se
 
 Frage: Liegt in der zweiten Regression der wahre kausale Effekt `beta1=2` im 95% Konfidenzintervall um unseren Schaetzer des Koeffizienten von x? Schreiben Sie "ja" oder "nein"
 ```{r "1_g_5"}
-
+"nein"
 # enter your code here ...
 
 ```
@@ -234,6 +241,7 @@ confint(lm(y~x))
 ```
 Berechnen Sie auch das 99% Konfidenzintervall:
 ```{r "1_g_7"}
+confint(lm(y~x), level = 0.99)
 
 # enter your code here ...
 
@@ -287,7 +295,7 @@ coef(lm(wage~educ, data=wage1))
 In welche Richtung veraendert sich vermutlich der geschaetzte Koeffizient von `educ` wenn wir Arbeitserfahrung `exper` mit in die Regression hineinnehmen? Schreiben Sie "groesser" oder "kleiner":
 
 ```{r "1_h_5",optional=TRUE}
-
+"groesser"
 # enter your code here ...
 
 ```
@@ -312,7 +320,7 @@ Aber was ist jetzt der "wahre" kausale Effekt von Ausbildungsjahren auf Stundenl
 
 Geben Sie 0.54 oder 0.64 an.
 ```{r "1_h_7"}
-
+0.54
 # enter your code here ...
 
 ```
@@ -329,7 +337,7 @@ Fuegen Sie zu dem Code unten noch eine dritte Regression hinzu, in der Sie sowoh
 ```{r "1_i"}
 reg1 <- lm(wage ~ educ, data = wage1)
 reg2 <- lm(wage ~ educ + female + nonwhite, data=wage1)
-
+reg3 <- lm(wage ~ educ + female + nonwhite + exper, data = wage1)
 # enter your code here ...
 
 ```
@@ -355,7 +363,12 @@ Sie erhalten durch den naechsten Chunk Informationen zum Datensatz:
 help(jtrain3)
 data(jtrain3)
 head(jtrain3)
+library(skimr)
+library(tidyverse)
+data("jtrain3")
 skim(jtrain3)
+install.packages("DiagrammeR")
+library(DiagrammeR)
 ```
 
 Wie die Variable `female` im vorherigen Beispiel sind auch hier wieder einige Variablen, die nur mit 0 und 1 belegt sind. Diese Variablen sind sogenannte Indikatorvariablen, welche auch oft Dummyvariablen genannt werden. Eine 1 in der entsprechenden Variable zeigt z.B. an, dass eine Person verheiratet ist (`married`), oder an der Weiterbildungsmassnahme im Jahr 1977 teilgenommen hat (`train`). Wir koennen Dummyvariablen ganz normal fuer eine OLS-Regression verwenden. Nur die Interpretation veraendert sich ein wenig, wenn die abhaengige Variable eine Dummyvariable ist, aber dazu gleich mehr...
@@ -363,7 +376,8 @@ Wie die Variable `female` im vorherigen Beispiel sind auch hier wieder einige Va
 Als kleine Voruebung, speichern Sie in der Variablen `n_train` die Zahl der Arbeitslosen im Datensatz, die an einer Weiterbildung teilgenommen haben und zeigen Sie `n_train`.
 
 ```{r "2_a_2"}
-
+n_train <- sum(jtrain3$train)
+n_train
 # enter your code here ...
 
 ```
@@ -378,7 +392,7 @@ Welches Vorzeichen sollte der kausale Effekt von Weiterbildungangebot `train` au
 Geben Sie hier die Ziffer Ihrer Antwort ein und fuehren Sie die Codezeile aus:
 
 ```{r "2_a_3"}
-
+2
 # enter your code here ...
 
 ```
@@ -393,8 +407,10 @@ b) Fuehren Sie eine lineare Regression (mittels OLS) mit x=`train` und y=`unem78
 
 # enter your code here ...
 
+reg1 <- lm(unem78 ~ train, data = jtrain3)
 
 # enter your code here ...
+summary(reg1)
 
 ```
 Hier waere ein guter Zeitpunkt das Addin 'Check Problemset' auszufuehren!
@@ -405,9 +421,9 @@ Bedeutet dies, dass mehr Weiterbildung zu mehr Arbeitslosigkeit fuehrt?
 
 c) Ergaenzen Sie folgenden Code um die durchschnittliche Teilnahme an Weiterbildungsprogrammen 1977 und die Arbeitslosenquote 1978 zwischen den Personen zu vergleichen, die 1975 arbeitslos/nicht arbeitslos waren.
 ```{r "2_c"}
-___ %>% 
- group_by(___) %>%
- summarize(mean(train), mean(___))
+jtrain3 %>% 
+ group_by(unem75) %>%
+ summarize(mean(train), mean(unem78))
 
 # enter your code here ...
 
@@ -443,7 +459,7 @@ Wir wollen gleich `unem75` als Kontrollvariable in die Regression hineinnehmen. 
 Schreiben Sie "kleiner" oder "groesser".
 
 ```{r "2_d_2"}
-
+"kleiner"
 # enter your code here ...
 
 ```
@@ -452,7 +468,8 @@ Hier waere ein guter Zeitpunkt das Addin 'Check Problemset' auszufuehren!
 Regressieren Sie nun `unem78` auf `train` und `unem75`. Speichern Sie das Ergebnis in der Variablen `reg2`. Zeigen Sie danach das Ergebnis von `reg1` und `reg2` nebeneinander mit `stargazer`.
 
 ```{r "2_d_3"}
-
+reg2 <- lm(unem78 ~ train + unem75, data = jtrain3)
+stargazer(reg1, reg2)
 # enter your code here ...
 
 ```
@@ -467,7 +484,11 @@ Erstellen Sie zwei Datensaetze aus `jtrain3`:
 
 ```{r "2_e"}
 
-# enter your code here ...
+jtrain3_la <- jtrain3 %>%
+  filter(unem75 == 1)
+
+jtrain3_ka <- jtrain3 %>%
+  filter(unem75 == 0)
 
 ```
 Hier waere ein guter Zeitpunkt das Addin 'Check Problemset' auszufuehren!
@@ -475,6 +496,9 @@ Hier waere ein guter Zeitpunkt das Addin 'Check Problemset' auszufuehren!
 Lassen Sie nun die einfache Regression von `unem78` auf `train` (ohne `unem75`) fuer beide Datensaetze (`jtrain3_la` und `jtrain3_ka`) laufen. Speichern Sie die Ergebnisse in den Variablen `reg_la` und `reg_ka` ab. Zeigen Sie danach `reg1`, `reg2`, `reg_la` und `reg_ka` nebeneinander mit `stargazer`.
 
 ```{r "2_e_2"}
+
+reg_la <- lm(unem78 ~ train, data = jtrain3_la)
+reg_ka <- lm(unem78 ~ train, data = jtrain3_ka)
 
 # enter your code here ...
 
@@ -528,7 +552,7 @@ Betrachten Sie folgendes Design fuer ein randomisiertes Experiment:
 Meinen Sie dieses Design loest die meisten relevanten Selektionsproblem und erlaubt es kausale Effekte von Weiterbildung zu schaetzen? Antworten Sie "ja" oder "nein".
 
 ```{r "2_f_2"}
-
+"nein"
 # enter your code here ...
 
 ```
